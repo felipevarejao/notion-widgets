@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notion Widget - Dark Mode Fixo</title>
+<title>Notion Widget - Integrated Sidebar</title>
 <style>
-  /* Remove qualquer margem e esconde as barras de rolagem */
   * {
     margin: 0;
     padding: 0;
@@ -17,225 +16,335 @@
   }
 
   html, body {
-    /* Força EXATAMENTE a cor de fundo do Modo Escuro do Notion */
     background-color: #191919 !important; 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    
-    /* Força os textos principais a serem brancos e brilhantes no fundo escuro */
     color: #ffffff !important; 
-    padding: 12px;
+    padding: 16px;
     max-width: 360px;
     overflow: hidden;
   }
 
-  /* Estrutura sem caixas brancas, totalmente integrada ao fundo escuro */
   .section {
-    margin-bottom: 24px;
+    margin-bottom: 32px; 
     padding: 0 !important; 
     background: transparent !important; 
     border: none !important;
     box-shadow: none !important;
   }
-
-  /* Títulos em cinza claro fosco, idêntico ao padrão do Notion */
-  .title {
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: rgba(255, 255, 255, 0.4) !important; 
-    text-transform: capitalize;
-    letter-spacing: 0.3px;
+  
+  .section-greeting {
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 22px !important;
   }
 
-  /* Texto de saudação em branco puro */
   .greeting {
-    font-size: 24px;
+    font-size: 25px;
     font-weight: 700;
     letter-spacing: -0.5px;
     color: #ffffff !important;
+    display: block;
   }
 
-  /* Container de fundo da barra de progresso adaptado para o escuro */
+  .quote-of-the-day {
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 8px;
+    font-weight: 400;
+    line-height: 1.4;
+    max-width: 310px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .quote-author {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 4px;
+    display: block;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Cabeçalho Duplo: Bateria + Clima Integrado */
+  .header-combined {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .title {
+    font-size: 20px; 
+    font-weight: 600; 
+    color: #ffffff !important; /* Mantendo o tom roxo/azul do seu padrão */
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+  }
+
+  .weather-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: right;
+  }
+
+  .weather-inline .icon {
+    font-size: 24px;
+  }
+
+  .weather-inline .temp-data {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .weather-inline .temp {
+    font-size: 30px;
+    font-weight: 700;
+    color: #ffffff !important;
+    line-height: 1.1;
+  }
+
+  .weather-inline .desc {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.35) !important;
+  }
+
+  /* Barras de Progresso */
+  .progress-group {
+    margin-bottom: 20px;
+  }
+
+  .progress-label {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.45);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
   .bar-container {
     width: 100%;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.1) !important; 
+    height: 8px;
+    background: rgba(255, 255, 255, 0.06) !important; 
     border-radius: 999px;
     overflow: hidden;
-    margin-top: 8px;
   }
 
   .bar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #6366f1, #10b981) !important;
     border-radius: 999px;
     transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
-  /* Estatísticas em cinza bem claro para leitura perfeita */
+  .bar-year { background: linear-gradient(90deg, #6366f1, #10b981) !important; }
+  .bar-quarter { background: linear-gradient(90deg, #ec4899, #8b5cf6) !important; }
+  .bar-month { background: linear-gradient(90deg, #3b82f6, #06b6d4) !important; }
+
   .stats {
-    margin-top: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    color: rgba(255, 255, 255, 0.8) !important;
+    margin-top: 8px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3) !important;
   }
 
-  .value {
+  /* Calendário Ancorado no Fundo */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    text-align: center;
+    font-size: 11px;
+    background: rgba(255, 255, 255, 0.015);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .calendar-day-head {
     font-weight: 700;
-    color: #ffffff !important;
+    color: rgba(255, 255, 255, 0.15);
+    text-transform: uppercase;
+    font-size: 9px;
+    margin-bottom: 4px;
   }
 
-  /* Clima */
-  .weather {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 4px;
-  }
-
-  .temp {
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.1;
-    color: #ffffff !important;
-  }
-
-  .desc {
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.5) !important;
-    margin-top: 2px;
-  }
-
-  .icon {
-    font-size: 34px;
+  .calendar-day {
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .calendar-day.empty {
+    visibility: hidden;
+  }
+
+  .calendar-day.today {
+    color: #ffffff !important;
+    font-weight: 700;
+    background: #6366f1 !important;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
   }
 </style>
 </head>
 
 <body>
 
-<div class="section">
-  <div class="title">Saudação</div>
+<div class="section section-greeting">
   <div class="greeting" id="greeting"></div>
-</div>
-
-<div class="section">
-  <div class="title">Progresso do Ano</div>
-
-  <div class="bar-container">
-    <div class="bar" id="bar"></div>
-  </div>
-
-  <div class="stats">
-    <div>Progresso: <span class="value" id="percent">0.0</span>%</div>
-    <div>Faltam: <span class="value" id="days">0</span> dias</div>
-    <div>ou <span class="value" id="weeks">0</span> semanas</div>
+  <div class="quote-of-the-day">
+    <span id="quote">Buscando frase do dia...</span>
+    <span id="author" class="quote-author"></span>
   </div>
 </div>
 
 <div class="section">
-  <div class="title">Clima</div>
-
-  <div class="weather">
-    <div class="icon" id="icon">⛅</div>
-    <div>
-      <div class="temp" id="temp">--°C</div>
-      <div class="desc" id="desc">Carregando...</div>
+  <div class="header-combined">
+    <div class="title"<br>Clima</div>
+    <div class="weather-inline">
+      <div class="icon" id="icon">⛅</div>
+      <div class="temp-data">
+        <div class="temp" id="temp">--°C</div>
+        <div class="desc" id="desc">Carregando...</div>
+      </div>
     </div>
   </div>
+
+  <div class="progress-group">
+    <div class="progress-label"><span>Ano Corrente</span><span><span id="percent-year">0.0</span>%</span></div>
+    <div class="bar-container"><div class="bar bar-year" id="bar-year"></div></div>
+  </div>
+  <div class="progress-group">
+    <div class="progress-label"><span>Trimestre Atual</span><span><span id="percent-quarter">0.0</span>%</span></div>
+    <div class="bar-container"><div class="bar bar-quarter" id="bar-quarter"></div></div>
+  </div>
+  <div class="progress-group">
+    <div class="progress-label"><span>Mês Vigente</span><span><span id="percent-month">0.0</span>%</span></div>
+    <div class="bar-container"><div class="bar bar-month" id="bar-month"></div></div>
+  </div>
+  <div class="stats">
+    Faltam <span style="color:#fff; font-weight:700;" id="days">0</span> dias para o fim do ano.
+  </div>
+</div>
+
+<div class="section" style="margin-bottom: 0;">
+  <div class="title" id="calendar-title" style="margin-bottom: 12px;">Calendário</div>
+  <div class="calendar-grid" id="calendar-grid"></div>
 </div>
 
 <script>
-/* ========= SAUDAÇÃO ========= */
 const now = new Date();
 const h = now.getHours();
 
-let greet;
-if (h >= 5 && h < 12) greet = "Bom dia, Felipe!";
-else if (h >= 12 && h < 18) greet = "Boa tarde, Felipe!";
-else greet = "Boa noite, Felipe!";
-
+// Saudação fixa inteligente
+let greet = (h >= 5 && h < 12) ? "Bom dia, Felipe! ☕" : (h >= 12 && h < 18) ? "Boa tarde, Felipe! ⚡" : "Boa noite, Felipe! 🌙";
 document.getElementById("greeting").textContent = greet;
 
-/* ========= PROGRESSO DO ANO ========= */
-const start = new Date(now.getFullYear(), 0, 1);
-const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+// API Frases
+function carregarFraseDoDia() {
+  fetch("https://raw.githubusercontent.com/jameslyons/pensador-api/master/quotes.json")
+    .then(r => r.json())
+    .then(data => {
+      const filtradas = data.filter(f => f.text.length > 10 && f.text.length < 90);
+      if (filtradas.length > 0) {
+        const start = new Date(now.getFullYear(), 0, 0);
+        const dayOfYear = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+        const frase = filtradas[dayOfYear % filtradas.length];
+        document.getElementById("quote").textContent = `“${frase.text.trim()}”`;
+        document.getElementById("author").textContent = frase.author || "Desconhecido";
+      }
+    })
+    .catch(() => {
+      document.getElementById("quote").textContent = "“Foco no progresso, não na perfeição.”";
+      document.getElementById("author").textContent = "Produtividade";
+    });
+}
+carregarFraseDoDia();
 
-const total = end - start;
-const passed = now - start;
+// Cálculos de Tempo
+const startYear = new Date(now.getFullYear(), 0, 1);
+const endYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+const percentYear = ((now - startYear) / (endYear - startYear)) * 100;
+document.getElementById("percent-year").textContent = percentYear.toFixed(1);
+document.getElementById("days").textContent = Math.ceil((endYear - now) / (1000 * 60 * 60 * 24));
 
-const percent = (passed / total) * 100;
-const remainingDays = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
-const remainingWeeks = Math.floor(remainingDays / 7);
+const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+const percentMonth = ((now - startMonth) / (endMonth - startMonth)) * 100;
+document.getElementById("percent-month").textContent = percentMonth.toFixed(1);
 
-document.getElementById("percent").textContent = percent.toFixed(1);
-document.getElementById("days").textContent = remainingDays;
-document.getElementById("weeks").textContent = remainingWeeks;
+const currentQStart = Math.floor(now.getMonth() / 3) * 3;
+const startQuarter = new Date(now.getFullYear(), currentQStart, 1);
+const endQuarter = new Date(now.getFullYear(), currentQStart + 3, 0, 23, 59, 59, 999);
+const percentQuarter = ((now - startQuarter) / (endQuarter - startQuarter)) * 100;
+document.getElementById("percent-quarter").textContent = percentQuarter.toFixed(1);
 
 setTimeout(() => {
-  document.getElementById("bar").style.width = percent + "%";
+  document.getElementById("bar-year").style.width = percentYear + "%";
+  document.getElementById("bar-month").style.width = percentMonth + "%";
+  document.getElementById("bar-quarter").style.width = percentQuarter + "%";
 }, 200);
 
-/* ========= CLIMA ========= */
+// Calendário
+function gerarCalendario() {
+  const listaMeses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+  document.getElementById("calendar-title").textContent = `${listaMeses[now.getMonth()]} de ${now.getFullYear()}`;
+  const grid = document.getElementById("calendar-grid");
+  const diasSemana = ["D", "S", "T", "Q", "Q", "S", "S"];
+  
+  diasSemana.forEach(d => {
+    const cell = document.createElement("div");
+    cell.className = "calendar-day-head";
+    cell.textContent = d;
+    grid.appendChild(cell);
+  });
+
+  const primeiroDiaIndex = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+  const ultimoDiaData = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+  for (let i = 0; i < primeiroDiaIndex; i++) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-day empty";
+    grid.appendChild(cell);
+  }
+
+  for (let d = 1; d <= ultimoDiaData; d++) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-day";
+    cell.textContent = d;
+    if (d === now.getDate()) cell.className = "calendar-day today";
+    grid.appendChild(cell);
+  }
+}
+gerarCalendario();
+
+// Clima Inline
 function setWeather(lat, lon) {
   fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
     .then(r => r.json())
     .then(data => {
       const w = data.current_weather;
       const temp = Math.round(w.temperature);
-
       document.getElementById("temp").textContent = temp + "°C";
-
-      let icon = "⛅";
-      let desc = "Agradável";
-
-      if (temp >= 30) {
-        icon = "☀️";
-        desc = "Quente";
-      } else if (temp <= 18) {
-        icon = "❄️";
-        desc = "Frio";
-      } else if (w.windspeed > 30) {
-        icon = "🌬️";
-        desc = "Ventando";
-      }
-
+      let icon = "⛅"; let desc = "Agradável";
+      if (temp >= 30) { icon = "☀️"; desc = "Quente"; }
+      else if (temp <= 18) { icon = "❄️"; desc = "Frio"; }
       document.getElementById("icon").textContent = icon;
       document.getElementById("desc").textContent = desc;
-    })
-    .catch(() => {
-      document.getElementById("desc").textContent = "Sem dados de clima";
-    });
+    }).catch(() => { document.getElementById("desc").textContent = "Sem sinal"; });
 }
-
-function fallbackLocation() {
-  fetch("https://ipapi.co/json/")
-    .then(r => r.json())
-    .then(loc => {
-      setWeather(loc.latitude, loc.longitude);
-    })
-    .catch(() => {
-      document.getElementById("desc").textContent = "Localização indisponível";
-    });
+function fallback() {
+  fetch("https://ipapi.co/json/").then(r => r.json()).then(l => setWeather(l.latitude, l.longitude))
+    .catch(() => { document.getElementById("desc").textContent = "Offline"; });
 }
-
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    pos => setWeather(pos.coords.latitude, pos.coords.longitude),
-    () => fallbackLocation()
-  );
-} else {
-  fallbackLocation();
-}
+if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(p => setWeather(p.coords.latitude, p.coords.longitude), () => fallback()); }
+else { fallback(); }
 </script>
-
 </body>
 </html>
