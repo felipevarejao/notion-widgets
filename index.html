@@ -11,11 +11,10 @@
     box-sizing: border-box;
   }
 
-  /* FIX REAL PARA NOTION */
   html, body {
-    background: #191919;
+    background: #a1a1aa;
     font-family: sans-serif;
-    color: #e5e5e5;
+    color: #dark;
     padding: 1rem;
   }
 
@@ -24,20 +23,21 @@
     padding: 16px;
     border-radius: 16px;
 
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   }
 
   .title {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 12px;
-    color: #ffffff;
+    color: #dark;
+    opacity: 0.9;
   }
 
   .greeting {
@@ -45,7 +45,6 @@
     font-weight: 600;
   }
 
-  /* PROGRESSO */
   .bar-container {
     width: 100%;
     height: 10px;
@@ -66,18 +65,17 @@
   .stats {
     margin-top: 10px;
     font-size: 13px;
-    color: #a1a1aa;
+    color: #dark;
     display: flex;
     gap: 14px;
     flex-wrap: wrap;
   }
 
   .value {
-    color: #ffffff;
+    color: #dark;
     font-weight: 500;
   }
 
-  /* WEATHER */
   .weather {
     display: flex;
     align-items: center;
@@ -94,8 +92,9 @@
     color: #a1a1aa;
   }
 
-  .icon {
-    font-size: 28px;
+  .icon svg {
+    width: 50px;
+    height: 50px;
   }
 </style>
 </head>
@@ -108,7 +107,7 @@
   <div class="greeting" id="greeting"></div>
 </div>
 
-<!-- PROGRESSO DO ANO -->
+<!-- PROGRESSO -->
 <div class="section">
   <div class="title">Progresso do Ano</div>
 
@@ -137,7 +136,6 @@
 </div>
 
 <script>
-
 /* ========= SAUDAÇÃO ========= */
 const now = new Date();
 const h = now.getHours();
@@ -149,19 +147,15 @@ else greet = "Boa noite, Felipe!";
 
 document.getElementById("greeting").textContent = greet;
 
-/* ========= PROGRESSO DO ANO (CORRIGIDO) ========= */
-const today = new Date();
-today.setHours(0,0,0,0);
-
-const start = new Date(today.getFullYear(), 0, 1);
-const end = new Date(today.getFullYear(), 11, 31);
-end.setHours(23,59,59,999);
+/* ========= PROGRESSO DO ANO ========= */
+const start = new Date(now.getFullYear(), 0, 1);
+const end = new Date(now.getFullYear(), 11, 31);
 
 const total = end - start;
-const passed = today - start;
+const passed = now - start;
 
 const percent = (passed / total) * 100;
-const remainingDays = Math.round((end - today) / (1000 * 60 * 60 * 24));
+const remainingDays = Math.floor((total - passed) / (1000 * 60 * 60 * 24));
 const weeks = Math.floor(remainingDays / 7);
 
 document.getElementById("percent").textContent = percent.toFixed(1);
@@ -173,7 +167,7 @@ setTimeout(() => {
   document.getElementById("bar").style.width = percent + "%";
 }, 200);
 
-/* ========= CLIMA (SEM GPS - FUNCIONA NO NOTION APP) ========= */
+/* ========= CLIMA (com fallback seguro) ========= */
 function setWeather(lat, lon) {
   fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
     .then(r => r.json())
@@ -201,25 +195,31 @@ function setWeather(lat, lon) {
       document.getElementById("desc").textContent = desc;
     })
     .catch(() => {
-      document.getElementById("desc").textContent = "Sem dados";
+      document.getElementById("desc").textContent = "Sem dados de clima";
     });
 }
 
-/* IP LOCATION (FUNCIONA NO NOTION APP) */
-function getLocation() {
+/* fallback (caso Notion bloqueie localização) */
+function fallbackLocation() {
   fetch("https://ipapi.co/json/")
     .then(r => r.json())
-    .then(data => {
-      setWeather(data.latitude, data.longitude);
+    .then(loc => {
+      setWeather(loc.latitude, loc.longitude);
     })
     .catch(() => {
-      document.getElementById("desc").textContent =
-        "Localização indisponível";
+      document.getElementById("desc").textContent = "Localização indisponível";
     });
 }
 
-getLocation();
-
+/* tentativa principal */
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    pos => setWeather(pos.coords.latitude, pos.coords.longitude),
+    () => fallbackLocation()
+  );
+} else {
+  fallbackLocation();
+}
 </script>
 
 </body>
