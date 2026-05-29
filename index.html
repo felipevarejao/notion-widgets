@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notion Widget - Seamless</title>
+<title>Notion Widget - Integrado</title>
 <style>
   * {
     margin: 0;
@@ -12,45 +12,34 @@
   }
 
   html, body {
-    background: transparent !important; /* Garante que o fundo do widget seja invisível */
+    /* Força o fundo a ser 100% transparente para sumir com os blocos brancos */
+    background: transparent !important; 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding: 12px;
-    max-width: 360px;
     
-    /* Configuração Padrão: Modo Claro do Notion */
-    color: #37352f; 
+    /* Usa a cor exata do texto padrão do Notion Modo Claro */
+    color: #37352f !important; 
+    padding: 8px;
+    max-width: 360px;
+    overflow: hidden; /* Remove barras de rolagem desnecessárias */
   }
 
-  /* CONFIGURAÇÃO AUTOMÁTICA: Modo Escuro do Notion */
-  @media (prefers-color-scheme: dark) {
-    body {
-      color: #979A9B; /* Cor padrão secundária do Notion Dark */
-    }
-    .greeting, .temp {
-      color: #FFFFFF !important; /* Destaca os textos principais em branco */
-    }
-    .bar-container {
-      background: rgba(255, 255, 255, 0.1) !important;
-    }
-    .title, .desc {
-      color: rgba(255, 255, 255, 0.4) !important;
-    }
-  }
-
-  /* Estrutura Invisível (Mesmo fundo do Notion) */
+  /* Estrutura totalmente transparente */
   .section {
-    margin-bottom: 24px;
-    padding: 4px 0; /* Remove os recuos internos para alinhar com o texto do Notion */
+    margin-bottom: 20px;
+    padding: 0; 
     background: transparent !important; 
     border: none !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .title {
     font-size: 12px;
     font-weight: 500;
     margin-bottom: 6px;
-    color: rgba(55, 53, 47, 0.6); /* Cor sutil de legenda do Notion */
+    /* Cor cinza sutil idêntica às legendas e subtextos do Notion */
+    color: rgba(55, 53, 47, 0.6) !important; 
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -59,14 +48,14 @@
     font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.5px;
-    color: #37352f;
+    color: #37352f !important;
   }
 
   /* Barra de Progresso */
   .bar-container {
     width: 100%;
     height: 10px;
-    background: rgba(55, 53, 47, 0.08); /* Cinza sutil que funciona no claro */
+    background: rgba(55, 53, 47, 0.08); /* Canal cinza sutil para a barra */
     border-radius: 999px;
     overflow: hidden;
     margin-top: 8px;
@@ -87,10 +76,11 @@
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+    color: #37352f !important;
   }
 
   .value {
-    font-weight: 600;
+    font-weight: 700;
   }
 
   /* Clima */
@@ -104,14 +94,14 @@
     font-size: 26px;
     font-weight: 700;
     line-height: 1.1;
-    color: #37352f;
+    color: #37352f !important;
   }
 
   .desc {
     font-size: 12px;
     font-weight: 500;
-    color: rgba(55, 53, 47, 0.5);
-    margin-top: 1px;
+    color: rgba(55, 53, 47, 0.6) !important;
+    margin-top: 2px;
   }
 
   .icon {
@@ -148,7 +138,7 @@
   <div class="title">Clima</div>
 
   <div class="weather">
-    <div class="icon" id="icon"></div>
+    <div class="icon" id="icon">⛅</div>
     <div>
       <div class="temp" id="temp">--°C</div>
       <div class="desc" id="desc">Carregando...</div>
