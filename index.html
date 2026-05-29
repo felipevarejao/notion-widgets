@@ -150,6 +150,7 @@ document.getElementById("greeting").textContent = greet;
 /* ========= PROGRESSO DO ANO ========= */
 const start = new Date(now.getFullYear(), 0, 1);
 const end = new Date(now.getFullYear(), 11, 31);
+end.setHours(23, 59, 59, 999);
 
 const total = end - start;
 const passed = now - start;
