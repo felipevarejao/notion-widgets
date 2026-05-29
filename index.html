@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>Notion Widget - Countdown</title>
 <style>
   * {
     margin: 0;
@@ -13,42 +13,54 @@
 
   html, body {
     background: transparent !important;
-    font-family: sans-serif;
-    color: #dark;
-    padding: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #37352f;
+    padding: 12px;
+    max-width: 360px;
+  }
+
+  /* Suporte automático ao Modo Escuro do Notion */
+  @media (prefers-color-scheme: dark) {
+    body {
+      color: #eaeded;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+    .title, .desc {
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
   }
 
   .section {
-    margin-bottom: 18px;
-    padding: 16px;
-    border-radius: 16px;
-
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
+    margin-bottom: 16px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: rgba(180, 180, 185, 0.25); 
+    border: 1px solid rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
   }
 
   .title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #dark;
-    opacity: 0.9;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: rgba(0, 0, 0, 0.5);
   }
 
   .greeting {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
   }
 
   .bar-container {
     width: 100%;
-    height: 10px;
-    background: rgba(255,255,255,0.08);
+    height: 12px;
+    background: rgba(0, 0, 0, 0.06);
     border-radius: 999px;
     overflow: hidden;
     margin-top: 10px;
@@ -57,57 +69,59 @@
   .bar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #6366f1, #22c55e);
+    background: linear-gradient(90deg, #6366f1, #10b981);
     border-radius: 999px;
     transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .stats {
-    margin-top: 10px;
+    margin-top: 12px;
     font-size: 13px;
-    color: #dark;
+    font-weight: 500;
     display: flex;
     gap: 14px;
     flex-wrap: wrap;
   }
 
   .value {
-    color: #dark;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .weather {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
   }
 
   .temp {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.1;
   }
 
   .desc {
-    font-size: 13px;
-    color: #a1a1aa;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.35);
+    margin-top: 2px;
   }
 
-  .icon svg {
-    width: 50px;
-    height: 50px;
+  .icon {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 </head>
 
 <body>
 
-<!-- SAUDAÇÃO -->
 <div class="section">
   <div class="title">Saudação</div>
   <div class="greeting" id="greeting"></div>
 </div>
 
-<!-- PROGRESSO -->
 <div class="section">
   <div class="title">Progresso do Ano</div>
 
@@ -116,20 +130,19 @@
   </div>
 
   <div class="stats">
-    <div>Progresso: <span class="value" id="percent"></span>%</div>
-    <div>Dias: <span class="value" id="days"></span></div>
-    <div>Semanas: <span class="value" id="weeks"></span></div>
+    <div>Progresso: <span class="value" id="percent">0.0</span>%</div>
+    <div>Faltam: <span class="value" id="days">0</span> dias</div>
+    <div>ou <span class="value" id="weeks">0</span> semanas</div>
   </div>
 </div>
 
-<!-- CLIMA -->
 <div class="section">
   <div class="title">Clima</div>
 
   <div class="weather">
     <div class="icon" id="icon">⛅</div>
     <div>
-      <div class="temp" id="temp">--</div>
+      <div class="temp" id="temp">--°C</div>
       <div class="desc" id="desc">Carregando...</div>
     </div>
   </div>
@@ -147,34 +160,36 @@ else greet = "Boa noite, Felipe!";
 
 document.getElementById("greeting").textContent = greet;
 
-/* ========= PROGRESSO DO ANO ========= */
+/* ========= PROGRESSO DO ANO (LOGICA DE CONTAGEM REGRESSIVA) ========= */
 const start = new Date(now.getFullYear(), 0, 1);
-const end = new Date(now.getFullYear(), 11, 31);
-end.setHours(23, 59, 59, 999);
+const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
 
 const total = end - start;
 const passed = now - start;
 
+// A porcentagem continua mostrando o quanto do ano JÁ PASSOU
 const percent = (passed / total) * 100;
-const remainingDays = Math.floor((total - passed) / (1000 * 60 * 60 * 24));
-const weeks = Math.floor(remainingDays / 7);
+
+// O cálculo de dias e semanas agora mostra o que RESTA até o fim do ano
+const remainingDays = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+const remainingWeeks = Math.floor(remainingDays / 7);
 
 document.getElementById("percent").textContent = percent.toFixed(1);
 document.getElementById("days").textContent = remainingDays;
-document.getElementById("weeks").textContent = weeks;
+document.getElementById("weeks").textContent = remainingWeeks;
 
-/* animação barra */
+/* Animação da barra */
 setTimeout(() => {
   document.getElementById("bar").style.width = percent + "%";
 }, 200);
 
-/* ========= CLIMA (com fallback seguro) ========= */
+/* ========= CLIMA ========= */
 function setWeather(lat, lon) {
   fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
     .then(r => r.json())
     .then(data => {
       const w = data.current_weather;
-      const temp = w.temperature;
+      const temp = Math.round(w.temperature);
 
       document.getElementById("temp").textContent = temp + "°C";
 
@@ -200,7 +215,6 @@ function setWeather(lat, lon) {
     });
 }
 
-/* fallback (caso Notion bloqueie localização) */
 function fallbackLocation() {
   fetch("https://ipapi.co/json/")
     .then(r => r.json())
@@ -212,7 +226,6 @@ function fallbackLocation() {
     });
 }
 
-/* tentativa principal */
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
     pos => setWeather(pos.coords.latitude, pos.coords.longitude),
