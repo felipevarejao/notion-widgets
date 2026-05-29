@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notion Widget - Countdown</title>
+<title>Notion Widget - Seamless</title>
 <style>
   * {
     margin: 0;
@@ -12,58 +12,64 @@
   }
 
   html, body {
-    background: transparent !important;
+    background: transparent !important; /* Garante que o fundo do widget seja invisível */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #37352f;
     padding: 12px;
     max-width: 360px;
+    
+    /* Configuração Padrão: Modo Claro do Notion */
+    color: #37352f; 
   }
 
-  /* Suporte automático ao Modo Escuro do Notion */
+  /* CONFIGURAÇÃO AUTOMÁTICA: Modo Escuro do Notion */
   @media (prefers-color-scheme: dark) {
     body {
-      color: #eaeded;
+      color: #979A9B; /* Cor padrão secundária do Notion Dark */
     }
-    .section {
-      background: rgba(255, 255, 255, 0.08) !important;
-      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    .greeting, .temp {
+      color: #FFFFFF !important; /* Destaca os textos principais em branco */
+    }
+    .bar-container {
+      background: rgba(255, 255, 255, 0.1) !important;
     }
     .title, .desc {
-      color: rgba(255, 255, 255, 0.6) !important;
+      color: rgba(255, 255, 255, 0.4) !important;
     }
   }
 
+  /* Estrutura Invisível (Mesmo fundo do Notion) */
   .section {
-    margin-bottom: 16px;
-    padding: 18px 20px;
-    border-radius: 18px;
-    background: rgba(180, 180, 185, 0.25); 
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    margin-bottom: 24px;
+    padding: 4px 0; /* Remove os recuos internos para alinhar com o texto do Notion */
+    background: transparent !important; 
+    border: none !important;
+    box-shadow: none !important;
   }
 
   .title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
-    margin-bottom: 10px;
-    color: rgba(0, 0, 0, 0.5);
+    margin-bottom: 6px;
+    color: rgba(55, 53, 47, 0.6); /* Cor sutil de legenda do Notion */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .greeting {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.5px;
+    color: #37352f;
   }
 
+  /* Barra de Progresso */
   .bar-container {
     width: 100%;
-    height: 12px;
-    background: rgba(0, 0, 0, 0.06);
+    height: 10px;
+    background: rgba(55, 53, 47, 0.08); /* Cinza sutil que funciona no claro */
     border-radius: 999px;
     overflow: hidden;
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .bar {
@@ -75,11 +81,11 @@
   }
 
   .stats {
-    margin-top: 12px;
+    margin-top: 10px;
     font-size: 13px;
     font-weight: 500;
     display: flex;
-    gap: 14px;
+    gap: 12px;
     flex-wrap: wrap;
   }
 
@@ -87,27 +93,29 @@
     font-weight: 600;
   }
 
+  /* Clima */
   .weather {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
 
   .temp {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     line-height: 1.1;
+    color: #37352f;
   }
 
   .desc {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
-    color: rgba(0, 0, 0, 0.35);
-    margin-top: 2px;
+    color: rgba(55, 53, 47, 0.5);
+    margin-top: 1px;
   }
 
   .icon {
-    font-size: 28px;
+    font-size: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -140,7 +148,7 @@
   <div class="title">Clima</div>
 
   <div class="weather">
-    <div class="icon" id="icon">⛅</div>
+    <div class="icon" id="icon"></div>
     <div>
       <div class="temp" id="temp">--°C</div>
       <div class="desc" id="desc">Carregando...</div>
@@ -160,17 +168,14 @@ else greet = "Boa noite, Felipe!";
 
 document.getElementById("greeting").textContent = greet;
 
-/* ========= PROGRESSO DO ANO (LOGICA DE CONTAGEM REGRESSIVA) ========= */
+/* ========= PROGRESSO DO ANO ========= */
 const start = new Date(now.getFullYear(), 0, 1);
 const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
 
 const total = end - start;
 const passed = now - start;
 
-// A porcentagem continua mostrando o quanto do ano JÁ PASSOU
 const percent = (passed / total) * 100;
-
-// O cálculo de dias e semanas agora mostra o que RESTA até o fim do ano
 const remainingDays = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
 const remainingWeeks = Math.floor(remainingDays / 7);
 
@@ -178,7 +183,6 @@ document.getElementById("percent").textContent = percent.toFixed(1);
 document.getElementById("days").textContent = remainingDays;
 document.getElementById("weeks").textContent = remainingWeeks;
 
-/* Animação da barra */
 setTimeout(() => {
   document.getElementById("bar").style.width = percent + "%";
 }, 200);
