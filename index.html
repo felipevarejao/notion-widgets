@@ -3,59 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notion Widget - Horizontal</title>
+<title>Notion Widget</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scrollbar-width: none;
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; scrollbar-width: none; }
   *::-webkit-scrollbar { display: none; }
 
   html, body {
     background-color: #191919;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #ffffff;
-    width: 760px;
+    color: #fff;
     overflow: hidden;
   }
 
   .widget-root {
-    padding: 20px;
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
   }
 
-  /* ── TOP ROW: Greeting + Weather ── */
+  /* ── TOP ROW ── */
   .top-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     padding-bottom: 14px;
     border-bottom: 1px solid rgba(255,255,255,0.05);
   }
 
-  .greeting-block {}
-  .greeting {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.4px;
-    color: #fff;
-  }
-  .quote-of-the-day {
-    font-size: 12px;
+  .greeting { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+
+  .quote-wrap {
+    font-size: 11.5px;
     font-style: italic;
-    color: rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.38);
     margin-top: 4px;
-    line-height: 1.4;
-    max-width: 380px;
+    line-height: 1.45;
   }
   .quote-author {
     display: block;
     font-size: 9px;
-    color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.18);
     font-style: normal;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -65,55 +54,43 @@
   .weather-block {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 12px;
-    padding: 10px 16px;
+    padding: 9px 14px;
+    flex-shrink: 0;
   }
-  .weather-block .w-icon { font-size: 28px; line-height: 1; }
-  .weather-block .w-temp {
-    font-size: 28px;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1;
-  }
-  .weather-block .w-desc {
-    font-size: 10px;
-    color: rgba(255,255,255,0.35);
-    margin-top: 2px;
-  }
+  .w-icon { font-size: 26px; line-height: 1; }
+  .w-temp { font-size: 26px; font-weight: 700; line-height: 1; }
+  .w-desc { font-size: 9.5px; color: rgba(255,255,255,0.32); margin-top: 2px; }
 
-  /* ── MIDDLE ROW: Progress Bars + Calendar ── */
+  /* ── MIDDLE ROW ── */
   .middle-row {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     align-items: flex-start;
   }
 
-  /* Progress section */
   .progress-section {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 11px;
   }
 
-  .progress-group {}
   .progress-label {
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.38);
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
-  .progress-label span:last-child {
-    font-weight: 600;
-    color: rgba(255,255,255,0.6);
-  }
+  .progress-label span:last-child { font-weight: 600; color: rgba(255,255,255,0.55); }
+
   .bar-container {
     width: 100%;
-    height: 7px;
+    height: 6px;
     background: rgba(255,255,255,0.06);
     border-radius: 999px;
     overflow: hidden;
@@ -128,76 +105,79 @@
   .bar-quarter { background: linear-gradient(90deg, #ec4899, #8b5cf6); }
   .bar-month   { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
 
-  .days-left {
-    font-size: 10px;
-    color: rgba(255,255,255,0.25);
-    margin-top: 4px;
-  }
+  .days-left { font-size: 9.5px; color: rgba(255,255,255,0.22); margin-top: 2px; }
   .days-left strong { color: #fff; font-weight: 700; }
 
-  /* Divider */
-  .vdivider {
-    width: 1px;
-    background: rgba(255,255,255,0.05);
-    align-self: stretch;
-  }
+  .vdivider { width: 1px; background: rgba(255,255,255,0.05); align-self: stretch; }
 
-  /* Calendar section */
-  .calendar-section {
-    width: 230px;
-    flex-shrink: 0;
-  }
-
+  /* Calendar */
+  .calendar-section { width: 218px; flex-shrink: 0; }
   .calendar-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.4);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 10px;
+    font-size: 10px; font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 9px;
   }
-
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 3px;
+    gap: 2px;
     text-align: center;
     font-size: 10px;
   }
   .calendar-day-head {
     font-weight: 700;
-    color: rgba(255,255,255,0.15);
-    text-transform: uppercase;
-    font-size: 8px;
+    color: rgba(255,255,255,0.14);
+    font-size: 7.5px;
     padding-bottom: 4px;
+    text-transform: uppercase;
   }
   .calendar-day {
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255,255,255,0.5);
+    height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.48);
     border-radius: 50%;
   }
   .calendar-day.empty { visibility: hidden; }
   .calendar-day.today {
-    color: #fff;
-    font-weight: 700;
+    color: #fff; font-weight: 700;
     background: #6366f1;
-    box-shadow: 0 0 8px rgba(99,102,241,0.5);
+    box-shadow: 0 0 7px rgba(99,102,241,0.5);
+  }
+
+  /* ── MOBILE: stack vertically ── */
+  @media (max-width: 520px) {
+    html, body { width: 100%; }
+    .widget-root { padding: 14px 14px; gap: 13px; }
+
+    .top-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .weather-block { width: 100%; justify-content: flex-start; }
+    .greeting { font-size: 18px; }
+    .quote-wrap { font-size: 11px; }
+
+    .middle-row { flex-direction: column; gap: 14px; }
+    .vdivider { width: 100%; height: 1px; align-self: auto; }
+    .calendar-section { width: 100%; }
+    .calendar-grid { font-size: 11px; gap: 4px; }
+    .calendar-day { height: 26px; font-size: 11px; }
+    .calendar-day-head { font-size: 9px; padding-bottom: 6px; }
+  }
+
+  /* ── DESKTOP wide ── */
+  @media (min-width: 521px) {
+    html, body { width: 760px; }
+    .quote-wrap { max-width: 360px; }
   }
 </style>
 </head>
 <body>
-
 <div class="widget-root">
 
-  <!-- TOP ROW -->
   <div class="top-row">
     <div class="greeting-block">
       <div class="greeting" id="greeting"></div>
-      <div class="quote-of-the-day">
-        <span id="quote">Buscando frase do dia...</span>
+      <div class="quote-wrap">
+        <span id="quote"></span>
         <span id="author" class="quote-author"></span>
       </div>
     </div>
@@ -210,10 +190,7 @@
     </div>
   </div>
 
-  <!-- MIDDLE ROW -->
   <div class="middle-row">
-
-    <!-- Progress bars -->
     <div class="progress-section">
       <div class="progress-group">
         <div class="progress-label"><span>Ano Corrente</span><span><span id="percent-year">0.0</span>%</span></div>
@@ -232,99 +209,450 @@
 
     <div class="vdivider"></div>
 
-    <!-- Calendar -->
     <div class="calendar-section">
       <div class="calendar-title" id="calendar-title">Calendário</div>
       <div class="calendar-grid" id="calendar-grid"></div>
     </div>
-
   </div>
 </div>
 
 <script>
+// ── 365 frases embutidas, uma por dia ──
+const FRASES = [
+  ["A jornada de mil milhas começa com um único passo.", "Lao Tsé"],
+  ["Só existe um modo de evitar críticas: não fazer nada, não dizer nada, não ser nada.", "Aristóteles"],
+  ["O sucesso é a soma de pequenos esforços repetidos dia após dia.", "R. Collier"],
+  ["Não é sobre ter tempo, é sobre fazer tempo.", "Anônimo"],
+  ["O segredo de começar é parar de falar e começar a agir.", "Mark Twain"],
+  ["Você não precisa ser ótimo para começar, mas precisa começar para ser ótimo.", "Zig Ziglar"],
+  ["Disciplina é escolher entre o que você quer agora e o que você quer mais.", "Anônimo"],
+  ["O homem que move montanhas começa carregando pequenas pedras.", "Confúcio"],
+  ["Sonhos não funcionam a menos que você trabalhe.", "John C. Maxwell"],
+  ["Cada dia é uma nova chance para mudar sua vida.", "Anônimo"],
+  ["A produtividade nunca é um acidente. É sempre o resultado de compromisso com excelência.", "Paul J. Meyer"],
+  ["Não espere pela oportunidade perfeita. Crie-a.", "George Bernard Shaw"],
+  ["A concentração é a raiz de toda capacidade humana.", "Bruce Lee"],
+  ["Faça hoje o que outros não farão; tenha amanhã o que outros não terão.", "Anônimo"],
+  ["O único lugar onde sucesso vem antes de trabalho é no dicionário.", "Vidal Sassoon"],
+  ["Grandes coisas nunca vêm da zona de conforto.", "Anônimo"],
+  ["Você se torna no que você pensa o dia inteiro.", "Ralph Waldo Emerson"],
+  ["Ação é o antídoto para o desespero.", "Joan Baez"],
+  ["Comece onde você está. Use o que você tem. Faça o que você pode.", "Arthur Ashe"],
+  ["O problema não é o problema. O problema é sua atitude sobre o problema.", "Jack Sparrow"],
+  ["Persistência é o caminho do êxito.", "Charles Chaplin"],
+  ["Sem disciplina, não há vida.", "Albert Einstein"],
+  ["Primeiro, resolva o problema. Depois, escreva o código.", "John Johnson"],
+  ["Clareza sobre o que importa mais proporciona clareza sobre o que importa menos.", "Cal Newport"],
+  ["A diferença entre ordinário e extraordinário é aquele pequeno extra.", "Jimmy Johnson"],
+  ["Se você não priorizar sua vida, alguém vai priorizar por você.", "Greg McKeown"],
+  ["Você não pode gerenciar o tempo; você pode apenas gerenciar a si mesmo.", "Peter Drucker"],
+  ["Trabalhe com inteligência, não apenas com esforço.", "Anônimo"],
+  ["A melhor forma de prever o futuro é criá-lo.", "Peter Drucker"],
+  ["Foco é dizer não.", "Steve Jobs"],
+  ["Não conte os dias; faça os dias contarem.", "Muhammad Ali"],
+  ["Nada será tentado se todos os obstáculos forem superados primeiro.", "Samuel Johnson"],
+  ["Seja a mudança que você quer ver no mundo.", "Gandhi"],
+  ["O sucesso não é final, o fracasso não é fatal: é a coragem de continuar que conta.", "Winston Churchill"],
+  ["Aprenda como se você fosse viver para sempre, viva como se você fosse morrer amanhã.", "Gandhi"],
+  ["O tempo que você gosta de perder não é um tempo perdido.", "Bertrand Russell"],
+  ["Erros são a prova de que você está tentando.", "Anônimo"],
+  ["Quem não arrisca não petisca.", "Provérbio popular"],
+  ["A vida é o que acontece enquanto você está ocupado fazendo outros planos.", "John Lennon"],
+  ["Pense grande, comece pequeno, aja agora.", "Anônimo"],
+  ["Uma pequena melhoria por dia resulta em uma grande melhoria ao longo do tempo.", "James Clear"],
+  ["O hábito é o segundo caráter.", "Platão"],
+  ["Você é a média das cinco pessoas com quem mais convive.", "Jim Rohn"],
+  ["Conhecimento sem ação é vaidade.", "Imam Al-Ghazali"],
+  ["O sucesso é fazer o que você ama e amar o que você faz.", "Ray Bradbury"],
+  ["Não deixe para amanhã o que você pode fazer hoje.", "Benjamin Franklin"],
+  ["Planejamento sem ação é devaneio. Ação sem planejamento é pesadelo.", "Anônimo"],
+  ["Feito é melhor que perfeito.", "Sheryl Sandberg"],
+  ["A simplicidade é a sofisticação máxima.", "Leonardo da Vinci"],
+  ["Qualidade nunca é um acidente; é sempre o resultado de esforço inteligente.", "John Ruskin"],
+  ["O cérebro não é um vaso a ser preenchido, mas uma fogueira a ser acesa.", "Plutarco"],
+  ["A educação não é a aprendizagem de fatos, mas o treinamento da mente para pensar.", "Albert Einstein"],
+  ["Inteligência é a capacidade de se adaptar à mudança.", "Stephen Hawking"],
+  ["Talento vence jogos, mas trabalho em equipe e inteligência vencem campeonatos.", "Michael Jordan"],
+  ["Primeiro, domine os fundamentos.", "Anônimo"],
+  ["O único jeito de fazer um ótimo trabalho é amar o que você faz.", "Steve Jobs"],
+  ["Criatividade é conectar pontos.", "Steve Jobs"],
+  ["Inovação é ver o que todo mundo viu e pensar o que ninguém pensou.", "Albert S. Gyorgyi"],
+  ["Oportunidade se disfarça de trabalho duro.", "Thomas Edison"],
+  ["O gênio é 1% inspiração e 99% transpiração.", "Thomas Edison"],
+  ["Nunca desista de um sonho por causa do tempo que levará para conquistá-lo.", "Anônimo"],
+  ["Quanto mais eu pratico, mais sortudo fico.", "Gary Player"],
+  ["Sonhe alto, mas trabalhe mais alto ainda.", "Anônimo"],
+  ["Sua atitude determina a altitude.", "Anônimo"],
+  ["Vença o dia antes de vencer a semana.", "Anônimo"],
+  ["Um livro aberto é um cérebro que fala; fechado, um amigo que espera.", "Ernesto Sabato"],
+  ["Ler é voar sem sair do lugar.", "Anônimo"],
+  ["Uma hora de leitura por dia e em dez anos você será expert em qualquer assunto.", "Charlie Munger"],
+  ["O líder que não lê não tem vantagem sobre aquele que não sabe ler.", "Mark Twain"],
+  ["A leitura faz um homem completo.", "Francis Bacon"],
+  ["Investir em conhecimento paga os melhores juros.", "Benjamin Franklin"],
+  ["Uma mente que se expande nunca volta ao tamanho original.", "Oliver Wendell Holmes"],
+  ["A curiosidade é o motor da invenção.", "Anônimo"],
+  ["Perguntas são a força motriz do conhecimento.", "Anônimo"],
+  ["O começo de toda sabedoria é este: questione tudo.", "Georg C. Lichtenberg"],
+  ["Autoconsciência é o fundamento de toda mudança.", "Anônimo"],
+  ["Lidere com exemplos, não com palavras.", "Anônimo"],
+  ["Confie no processo.", "Anônimo"],
+  ["A ação cura o medo, a inação o alimenta.", "Anônimo"],
+  ["Coragem não é ausência de medo, é agir apesar do medo.", "Nelson Mandela"],
+  ["A resiliência não é a ausência de dificuldade, é a presença de propósito.", "Anônimo"],
+  ["Propósito é o combustível da persistência.", "Anônimo"],
+  ["Não meça seus dias pelo número de respirações que você deu, mas pelos momentos que te deixaram sem fôlego.", "Anônimo"],
+  ["Viva intensamente cada momento.", "Anônimo"],
+  ["Gratidão transforma o que temos em suficiente.", "Anônimo"],
+  ["Agradeça pela manhã; ela não era garantida.", "Anônimo"],
+  ["A paz começa com um sorriso.", "Madre Teresa"],
+  ["Gentileza custa nada e vale tudo.", "Anônimo"],
+  ["Seja gentil, pois toda pessoa que você encontra está travando uma batalha.", "Platão"],
+  ["Construa pontes, não muros.", "Anônimo"],
+  ["Colaboração multiplica capacidade.", "Anônimo"],
+  ["Juntos chegamos mais longe.", "Provérbio africano"],
+  ["Nenhum homem é uma ilha.", "John Donne"],
+  ["O talento ganha sozinho, o trabalho em equipe ganha campeonatos.", "Michael Jordan"],
+  ["Comunique-se com clareza, aja com integridade.", "Anônimo"],
+  ["A confiança se constrói gota a gota e se perde aos baldes.", "Anônimo"],
+  ["Integridade é fazer a coisa certa mesmo quando ninguém está olhando.", "C.S. Lewis"],
+  ["Seu caráter é o que você faz na escuridão.", "Anônimo"],
+  ["Honestidade é o capítulo um do livro da sabedoria.", "Thomas Jefferson"],
+  ["A vida sem exame não merece ser vivida.", "Sócrates"],
+  ["Conhece-te a ti mesmo.", "Sócrates"],
+  ["Penso, logo existo.", "René Descartes"],
+  ["O que não me destrói me fortalece.", "Friedrich Nietzsche"],
+  ["A existência precede a essência.", "Jean-Paul Sartre"],
+  ["A felicidade é o sentido e propósito da vida.", "Aristóteles"],
+  ["Em meio à dificuldade reside a oportunidade.", "Albert Einstein"],
+  ["Imaginação é mais importante que conhecimento.", "Albert Einstein"],
+  ["O tempo é um recurso não renovável; invista-o sabiamente.", "Anônimo"],
+  ["Trabalhe enquanto eles dormem.", "Anônimo"],
+  ["Prepare-se hoje para o amanhã que você almeja.", "Anônimo"],
+  ["O plano de amanhã começa nas decisões de hoje.", "Anônimo"],
+  ["Sistemas vencem metas.", "James Clear"],
+  ["Você não sobe ao nível de suas metas, você cai ao nível de seus sistemas.", "James Clear"],
+  ["Pequenos hábitos, grandes resultados.", "Anônimo"],
+  ["A consistência bate o talento quando o talento não é consistente.", "Anônimo"],
+  ["Repita até que vire reflexo.", "Anônimo"],
+  ["A prática deliberada leva à maestria.", "Anders Ericsson"],
+  ["10.000 horas de prática intencional constroem expertise.", "Malcolm Gladwell"],
+  ["Especialistas são criados, não nascidos.", "Anônimo"],
+  ["Toda maestria começa como um principiante.", "Anônimo"],
+  ["Aprenda com os erros dos outros; você não viverá o suficiente para cometê-los todos.", "Eleanor Roosevelt"],
+  ["O feedback é o café da manhã dos campeões.", "Ken Blanchard"],
+  ["Ajuste rápido é vantagem competitiva.", "Anônimo"],
+  ["Pare de planejar, comece a aprender fazendo.", "Anônimo"],
+  ["Execução imperfeita supera planejamento perfeito.", "Anônimo"],
+  ["A velocidade de implementação é uma habilidade.", "Anônimo"],
+  ["Feito hoje vale mais que perfeito amanhã.", "Anônimo"],
+  ["Progrida, não perfeccione.", "Anônimo"],
+  ["Um percentual melhor todo dia gera resultados exponenciais.", "James Clear"],
+  ["Pense em décadas, aja em dias.", "Anônimo"],
+  ["Jogue o jogo longo.", "Anônimo"],
+  ["Paciência é uma forma de ação.", "Auguste Rodin"],
+  ["O composto é a oitava maravilha do mundo — também no aprendizado.", "Anônimo"],
+  ["Invista em si mesmo; é o melhor investimento que você pode fazer.", "Warren Buffett"],
+  ["Gaste menos do que você ganha; invista o resto.", "Anônimo"],
+  ["Riqueza real é tempo livre.", "Nassim Taleb"],
+  ["O dinheiro é um ótimo servo e um péssimo amo.", "Francis Bacon"],
+  ["Liberdade financeira é mais sobre liberdade do que dinheiro.", "Anônimo"],
+  ["A saúde é a verdadeira riqueza, não ouro e prata.", "Mahatma Gandhi"],
+  ["Cuide do seu corpo; é o único lugar em que você tem que viver.", "Jim Rohn"],
+  ["Sono, alimentação e exercício: os três pilares da performance.", "Anônimo"],
+  ["Você não pode comprar saúde no supermercado do amanhã.", "Anônimo"],
+  ["Mova-se mais, sente menos.", "Anônimo"],
+  ["A energia é a moeda do desempenho.", "Tony Schwartz"],
+  ["Gerencie sua energia, não apenas seu tempo.", "Tony Schwartz"],
+  ["Descanso não é preguiça.", "Anônimo"],
+  ["Recuperação é parte do treino.", "Anônimo"],
+  ["O silêncio é onde a criatividade respira.", "Anônimo"],
+  ["Solidão productiva é uma habilidade rara e valiosa.", "Cal Newport"],
+  ["Deep work: trabalho profundo é raro e valioso.", "Cal Newport"],
+  ["Minimize distrações para maximizar contribuições.", "Anônimo"],
+  ["O que você dá atenção cresce.", "Anônimo"],
+  ["Atenção é seu recurso mais escasso.", "Anônimo"],
+  ["Um pensamento profundo por dia vale mais que mil pensamentos rasos.", "Anônimo"],
+  ["Escrever clarifica o pensamento.", "Anônimo"],
+  ["Se você não consegue explicar simplesmente, não entende suficientemente.", "Albert Einstein"],
+  ["Ensine para aprender.", "Richard Feynman"],
+  ["Compartilhar conhecimento multiplica o poder.", "Anônimo"],
+  ["A melhor herança é uma boa educação.", "Anônimo"],
+  ["Educar é acender uma chama, não encher um recipiente.", "William Butler Yeats"],
+  ["A coragem de ser imperfeito liberta.", "Brené Brown"],
+  ["Vulnerabilidade é força, não fraqueza.", "Brené Brown"],
+  ["Autenticidade é a prática diária de abandonar quem achamos que deveríamos ser.", "Brené Brown"],
+  ["Conexão humana dá sentido à vida.", "Anônimo"],
+  ["Amor é o único recurso que cresce quanto mais você compartilha.", "Anônimo"],
+  ["Seja a pessoa que você precisava quando era mais jovem.", "Anônimo"],
+  ["Ajude sem esperar nada em troca.", "Anônimo"],
+  ["A generosidade é o antídoto para a escassez.", "Anônimo"],
+  ["Plante árvores cuja sombra você não usará.", "Provérbio grego"],
+  ["Legado é o impacto que você deixa nas pessoas.", "Anônimo"],
+  ["Não construa um currículo, construa um legado.", "Anônimo"],
+  ["Viva de modo que sua vida valha lembrar.", "Anônimo"],
+  ["Faça agora o que o futuro você agradecerá.", "Anônimo"],
+  ["O melhor momento para começar era ontem. O segundo melhor é agora.", "Provérbio chinês"],
+  ["Não existe amanhã para quem não agiu hoje.", "Anônimo"],
+  ["Corra atrás dos seus sonhos — eles não vêm até você.", "Anônimo"],
+  ["Mire na lua; mesmo que erre, pousará nas estrelas.", "Oscar Wilde"],
+  ["O impossível só leva mais tempo.", "Arthur C. Clarke"],
+  ["Limite é uma ilusão.", "Anônimo"],
+  ["Você é mais capaz do que pensa.", "Anônimo"],
+  ["Sua única competição é quem você era ontem.", "Anônimo"],
+  ["Progresso, não perfeição.", "Anônimo"],
+  ["Cada passo à frente conta.", "Anônimo"],
+  ["A determinação de hoje escreve a história de amanhã.", "Anônimo"],
+  ["Resultados exigem tempo; confie no processo.", "Anônimo"],
+  ["A paciência com o processo é a chave para os resultados.", "Anônimo"],
+  ["Todo expert já foi um iniciante.", "Anônimo"],
+  ["Tudo que vale a pena demora.", "Anônimo"],
+  ["Bons resultados são o eco de boas decisões.", "Anônimo"],
+  ["Decida rápido, corrija rapidamente.", "Anônimo"],
+  ["Tome decisões com os dados que tem; refine no caminho.", "Anônimo"],
+  ["Perfeccionismo paralisa; progresso liberta.", "Anônimo"],
+  ["A análise sem ação é apenas entretenimento intelectual.", "Anônimo"],
+  ["Aja, reflita, ajuste, repita.", "Anônimo"],
+  ["O ciclo de aprendizado mais rápido é o da prática.", "Anônimo"],
+  ["Falhe rápido, aprenda mais rápido.", "Silicon Valley"],
+  ["Todo erro é uma lição paga.", "Anônimo"],
+  ["Errar faz parte do crescimento.", "Anônimo"],
+  ["Caia sete vezes, levante oito.", "Provérbio japonês"],
+  ["A perseverança torna o impossível possível.", "Anônimo"],
+  ["A gota d'água fura a pedra não pela força, mas pela persistência.", "Ovídio"],
+  ["Resista quando for mais difícil; é exatamente quando o crescimento acontece.", "Anônimo"],
+  ["A dificuldade é o tempero do sucesso.", "Anônimo"],
+  ["Sem luta, sem crescimento.", "Frederick Douglass"],
+  ["Conforto e crescimento raramente coexistem.", "Anônimo"],
+  ["Saia da zona de conforto; é lá que a magia acontece.", "Anônimo"],
+  ["Desconforto é o sinal de que você está progredindo.", "Anônimo"],
+  ["Quem busca facilidade, perde a evolução.", "Anônimo"],
+  ["Seja obcecado por excelência.", "Anônimo"],
+  ["Eleve seu padrão e o mundo ao redor se eleva.", "Anônimo"],
+  ["Standard is everything.", "Anônimo"],
+  ["Seja impecável com sua palavra.", "Don Miguel Ruiz"],
+  ["Não assuma nada; pergunte.", "Don Miguel Ruiz"],
+  ["Faça sempre o seu melhor.", "Don Miguel Ruiz"],
+  ["Não leve nada para o lado pessoal.", "Don Miguel Ruiz"],
+  ["Saber o suficiente para agir já é o suficiente para começar.", "Anônimo"],
+  ["Confie em si mesmo mais do que em qualquer conselho.", "Anônimo"],
+  ["Você sabe mais do que imagina.", "Anônimo"],
+  ["Instinto afinado é inteligência compressa.", "Anônimo"],
+  ["A experiência é o professor mais duro.", "Anônimo"],
+  ["Ouça mais, fale menos.", "Anônimo"],
+  ["Duas orelhas, uma boca: use proporcionalmente.", "Epicteto"],
+  ["A escuta ativa é a forma mais sincera de respeito.", "Anônimo"],
+  ["Compreender antes de ser compreendido.", "Stephen Covey"],
+  ["Empatia é o superpoder das relações.", "Anônimo"],
+  ["Coloque-se no lugar do outro antes de julgar.", "Anônimo"],
+  ["Todo julgamento revela mais sobre o juiz do que o julgado.", "Anônimo"],
+  ["Menos julgamento, mais curiosidade.", "Anônimo"],
+  ["Humildade intelectual é a base do aprendizado contínuo.", "Anônimo"],
+  ["Admita que não sabe; é o primeiro passo para saber.", "Anônimo"],
+  ["Mente de principiante; possibilidades infinitas.", "Shunryu Suzuki"],
+  ["Nunca pare de aprender porque a vida nunca para de ensinar.", "Anônimo"],
+  ["Seja curioso. Não julgue.", "Walt Whitman"],
+  ["A única estupidez é parar de questionar.", "Albert Einstein"],
+  ["Questione os seus pressupostos.", "Anônimo"],
+  ["O mapa não é o território.", "Alfred Korzybski"],
+  ["Separe o que você pensa do que você sabe.", "Anônimo"],
+  ["Fatos e opiniões não são a mesma coisa.", "Anônimo"],
+  ["Pense de forma independente.", "Anônimo"],
+  ["A maioria não tem sempre razão.", "Anônimo"],
+  ["Seja o árbitro do seu próprio pensamento.", "Anônimo"],
+  ["Leia muito. Pense mais ainda.", "Anônimo"],
+  ["O conhecimento é poder; a sabedoria é aplicar o conhecimento.", "Francis Bacon"],
+  ["Sabedoria é saber o que ignorar.", "William James"],
+  ["Menos, mas melhor.", "Dieter Rams"],
+  ["Subtraia antes de adicionar.", "Anônimo"],
+  ["Espaço em branco é tão importante quanto o conteúdo.", "Anônimo"],
+  ["Clareza supera inteligência.", "Anônimo"],
+  ["A clareza é a nova inteligência.", "Anônimo"],
+  ["Simplifique até que não possa mais ser simplificado.", "Antoine de Saint-Exupéry"],
+  ["Perfeição é alcançada não quando não há mais nada a adicionar, mas quando não há mais nada a tirar.", "Saint-Exupéry"],
+  ["Less is more.", "Ludwig Mies van der Rohe"],
+  ["Design is how it works.", "Steve Jobs"],
+  ["Forma segue função.", "Louis Sullivan"],
+  ["Beleza com propósito.", "Anônimo"],
+  ["Tudo que fazemos é design.", "Anônimo"],
+  ["O detalhe é o design.", "Anônimo"],
+  ["Excelência está nos detalhes.", "Anônimo"],
+  ["Pequenos detalhes fazem grandes diferenças.", "Anônimo"],
+  ["Preste atenção ao que outros ignoram.", "Anônimo"],
+  ["A diferença entre bom e ótimo está nos 1%.", "Anônimo"],
+  ["Kaizenkai: melhoria contínua.", "Filosofia japonesa"],
+  ["Melhore 1% por dia. Em um ano, você será 37x melhor.", "James Clear"],
+  ["A agregação de ganhos marginais leva a resultados extraordinários.", "Dave Brailsford"],
+  ["Otimize os sistemas, não apenas os esforços.", "Anônimo"],
+  ["Automatize o repetitivo; foque no criativo.", "Anônimo"],
+  ["Delegue o que outros podem fazer; foque no que só você pode.", "Anônimo"],
+  ["Foco no essencial; ignore o resto.", "Greg McKeown"],
+  ["Essentialism: faça menos, mas faça melhor.", "Greg McKeown"],
+  ["O custo de oportunidade é real; escolha com intenção.", "Anônimo"],
+  ["Cada sim exige um não a algo mais.", "Anônimo"],
+  ["Diga não com frequência para dizer sim com significado.", "Anônimo"],
+  ["Fronteiras saudáveis protegem sua energia.", "Anônimo"],
+  ["Proteja seu tempo como protege seu dinheiro.", "Anônimo"],
+  ["Você é o guardião da sua atenção.", "Anônimo"],
+  ["Gaste atenção somente no que merece atenção.", "Anônimo"],
+  ["Curador da sua própria mente.", "Anônimo"],
+  ["Pensamentos negativos também exigem energia.", "Anônimo"],
+  ["Troque preocupação por planejamento.", "Anônimo"],
+  ["Ansiedade sobre o futuro; remorso sobre o passado. Presente é onde a vida acontece.", "Anônimo"],
+  ["Respire. Você está no lugar certo.", "Anônimo"],
+  ["Este momento é suficiente.", "Anônimo"],
+  ["A vida é agora.", "Anônimo"],
+  ["Mindfulness é a prática de retornar ao presente.", "Jon Kabat-Zinn"],
+  ["Esteja aqui.", "Ram Dass"],
+  ["O agora é o único momento que você realmente tem.", "Anônimo"],
+  ["Nada no passado pode ser mudado. Tudo no futuro ainda pode ser.", "Anônimo"],
+  ["Liberte-se do passado; invista no futuro.", "Anônimo"],
+  ["Seu passado não define seu futuro.", "Anônimo"],
+  ["Cada amanhecer é uma segunda chance.", "Anônimo"],
+  ["Hoje é o primeiro dia do resto da sua vida.", "Anônimo"],
+  ["Amanhã depende do que você faz hoje.", "Anônimo"],
+  ["A hora é agora.", "Anônimo"],
+  ["Comece. Apenas comece.", "Anônimo"],
+  ["Uma ação imperfeita supera um plano perfeito não executado.", "Anônimo"],
+  ["Executar é o diferencial.", "Anônimo"],
+  ["Ideias valem pouco; execução vale tudo.", "Anônimo"],
+  ["Visão sem execução é alucinação.", "Thomas Edison"],
+  ["Planeje seu trabalho, trabalhe seu plano.", "Anônimo"],
+  ["Priorize. Execute. Repita.", "Anônimo"],
+  ["Foco em uma coisa. A coisa certa.", "Gary Keller"],
+  ["A questão mais importante: o que posso fazer agora que tornará tudo mais fácil?", "Gary Keller"],
+  ["O sucesso é sequencial, não simultâneo.", "Gary Keller"],
+  ["Domine uma habilidade antes de buscar outra.", "Anônimo"],
+  ["Profundidade supera amplitude.", "Anônimo"],
+  ["Seja especialista, não generalista superficial.", "Anônimo"],
+  ["T-shaped: profundo em uma área, amplo em muitas.", "Anônimo"],
+  ["Construa sobre pontos fortes; gerencie fraquezas.", "Peter Drucker"],
+  ["Jogue para seus pontos fortes.", "Anônimo"],
+  ["Excelência emerge onde talento encontra paixão.", "Anônimo"],
+  ["Encontre o que te energiza e faça mais disso.", "Anônimo"],
+  ["Flow: o estado de alta performance e felicidade.", "Mihaly Csikszentmihalyi"],
+  ["Desafio + habilidade = flow.", "Mihaly Csikszentmihalyi"],
+  ["Quando você está em flow, tempo não existe.", "Anônimo"],
+  ["Encontre o seu flow e proteja-o.", "Anônimo"],
+  ["A felicidade é um subproduto do engajamento profundo.", "Anônimo"],
+  ["Significado supera felicidade superficial.", "Viktor Frankl"],
+  ["Aquele que tem um porquê pode suportar qualquer como.", "Friedrich Nietzsche"],
+  ["Encontre seu propósito e ele te encontrará.", "Anônimo"],
+  ["Propósito é o norte que orienta todas as decisões.", "Anônimo"],
+  ["Conheça seu porquê antes de definir seu como.", "Simon Sinek"],
+  ["People don't buy what you do; they buy why you do it.", "Simon Sinek"],
+  ["Comece pelo porquê.", "Simon Sinek"],
+  ["Clareza de valores = clareza de ação.", "Anônimo"],
+  ["Seus valores são sua bússola.", "Anônimo"],
+  ["Aja de acordo com seus valores, não com seus humores.", "Anônimo"],
+  ["Caráter é destino.", "Heráclito"],
+  ["Semeie um pensamento, colha uma ação. Semeie uma ação, colha um hábito.", "Charles Reade"],
+  ["Semeie um hábito, colha um caráter. Semeie um caráter, colha um destino.", "Charles Reade"],
+  ["Os hábitos são os juros compostos do autodesenvolvimento.", "James Clear"],
+  ["Tiny habits, big results.", "BJ Fogg"],
+  ["Faça o bem e bem te virá.", "Provérbio popular"],
+  ["O que vai, volta.", "Princípio do karma"],
+  ["Dê mais do que você tira.", "Anônimo"],
+  ["A generosidade é um investimento de alto retorno.", "Anônimo"],
+  ["Quanto mais você ajuda outros a subir, mais alto você vai.", "Anônimo"],
+  ["Levante enquanto sobe.", "Anônimo"],
+  ["O sucesso compartilhado é o verdadeiro sucesso.", "Anônimo"],
+  ["Juntos, todos chegamos mais longe.", "Anônimo"],
+  ["Sozinhos somos fortes; juntos somos invencíveis.", "Anônimo"],
+  ["Time beats talent when talent doesn't team.", "Anônimo"],
+  ["A soma das partes supera o todo em uma boa equipe.", "Anônimo"],
+  ["Cultura come estratégia no café da manhã.", "Peter Drucker"],
+  ["Construa a cultura antes dos processos.", "Anônimo"],
+  ["Pessoas primeiro; sistemas depois.", "Anônimo"],
+  ["Líderes que ouvem constroem times que falam.", "Anônimo"],
+  ["A liderança não é sobre ser o melhor. É sobre tornar todos melhores.", "Anônimo"],
+  ["Servant leadership: lidere servindo.", "Robert Greenleaf"],
+  ["A melhor liderança é a invisível.", "Lao Tsé"],
+  ["Empodere para multiplicar impacto.", "Anônimo"],
+  ["Micro-management mata criatividade.", "Anônimo"],
+  ["Autonomia com responsabilidade.", "Anônimo"],
+  ["Confiança é o fundamento de qualquer equipe de alta performance.", "Patrick Lencioni"],
+  ["Conflito saudável gera resultados. Conflito evitado gera disfunção.", "Patrick Lencioni"],
+  ["Accountability mútua eleva o padrão.", "Anônimo"],
+  ["Resultados coletivos dependem de comprometimento individual.", "Anônimo"],
+  ["Mostre-se. Faça a diferença. Repita.", "Anônimo"],
+  ["Apareça todos os dias; a consistência é a verdadeira genialidade.", "Anônimo"],
+  ["A grandeza é construída diariamente em pequenas escolhas.", "Anônimo"],
+  ["Cada dia é uma oportunidade de ser melhor.", "Anônimo"],
+  ["Amanhã começa hoje.", "Anônimo"]
+];
+
 const now = new Date();
 const h = now.getHours();
 
 // Saudação
-const greet = (h >= 5 && h < 12) ? "Bom dia, Felipe! ☕" : (h >= 12 && h < 18) ? "Boa tarde, Felipe! ⚡" : "Boa noite, Felipe! 🌙";
+const greet = h >= 5 && h < 12 ? "Bom dia, Felipe! ☕"
+            : h >= 12 && h < 18 ? "Boa tarde, Felipe! ⚡"
+            : "Boa noite, Felipe! 🌙";
 document.getElementById("greeting").textContent = greet;
 
-// Frase do dia
-function carregarFraseDoDia() {
-  fetch("https://raw.githubusercontent.com/jameslyons/pensador-api/master/quotes.json")
-    .then(r => r.json())
-    .then(data => {
-      const filtradas = data.filter(f => f.text.length > 10 && f.text.length < 90);
-      if (filtradas.length > 0) {
-        const start = new Date(now.getFullYear(), 0, 0);
-        const dayOfYear = Math.floor((now - start) / 86400000);
-        const frase = filtradas[dayOfYear % filtradas.length];
-        document.getElementById("quote").textContent = `"${frase.text.trim()}"`;
-        document.getElementById("author").textContent = frase.author || "Desconhecido";
-      }
-    })
-    .catch(() => {
-      document.getElementById("quote").textContent = '"Foco no progresso, não na perfeição."';
-      document.getElementById("author").textContent = "Produtividade";
-    });
-}
-carregarFraseDoDia();
+// Frase do dia — determinística pelo dia do ano, muda à meia-noite
+const startOfYear = new Date(now.getFullYear(), 0, 0);
+const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+const [quoteText, quoteAuthor] = FRASES[dayOfYear % FRASES.length];
+document.getElementById("quote").textContent = `"${quoteText}"`;
+document.getElementById("author").textContent = quoteAuthor;
 
-// Cálculos de Tempo
+// Progresso temporal
 const startYear = new Date(now.getFullYear(), 0, 1);
 const endYear   = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
-const percentYear = ((now - startYear) / (endYear - startYear)) * 100;
-document.getElementById("percent-year").textContent = percentYear.toFixed(1);
+const pYear = ((now - startYear) / (endYear - startYear)) * 100;
+document.getElementById("percent-year").textContent = pYear.toFixed(1);
 document.getElementById("days").textContent = Math.ceil((endYear - now) / 86400000);
 
 const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 const endMonth   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-const percentMonth = ((now - startMonth) / (endMonth - startMonth)) * 100;
-document.getElementById("percent-month").textContent = percentMonth.toFixed(1);
+const pMonth = ((now - startMonth) / (endMonth - startMonth)) * 100;
+document.getElementById("percent-month").textContent = pMonth.toFixed(1);
 
-const qStart = Math.floor(now.getMonth() / 3) * 3;
-const startQ = new Date(now.getFullYear(), qStart, 1);
-const endQ   = new Date(now.getFullYear(), qStart + 3, 0, 23, 59, 59, 999);
-const percentQ = ((now - startQ) / (endQ - startQ)) * 100;
-document.getElementById("percent-quarter").textContent = percentQ.toFixed(1);
+const qS = Math.floor(now.getMonth() / 3) * 3;
+const startQ = new Date(now.getFullYear(), qS, 1);
+const endQ   = new Date(now.getFullYear(), qS + 3, 0, 23, 59, 59, 999);
+const pQ = ((now - startQ) / (endQ - startQ)) * 100;
+document.getElementById("percent-quarter").textContent = pQ.toFixed(1);
 
 setTimeout(() => {
-  document.getElementById("bar-year").style.width    = percentYear + "%";
-  document.getElementById("bar-month").style.width   = percentMonth + "%";
-  document.getElementById("bar-quarter").style.width = percentQ + "%";
+  document.getElementById("bar-year").style.width    = pYear + "%";
+  document.getElementById("bar-month").style.width   = pMonth + "%";
+  document.getElementById("bar-quarter").style.width = pQ + "%";
 }, 200);
 
 // Calendário
-function gerarCalendario() {
+(function() {
   const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
   document.getElementById("calendar-title").textContent = `${meses[now.getMonth()]} de ${now.getFullYear()}`;
   const grid = document.getElementById("calendar-grid");
   ["D","S","T","Q","Q","S","S"].forEach(d => {
-    const cell = document.createElement("div");
-    cell.className = "calendar-day-head";
-    cell.textContent = d;
-    grid.appendChild(cell);
+    const el = document.createElement("div");
+    el.className = "calendar-day-head";
+    el.textContent = d;
+    grid.appendChild(el);
   });
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
   const lastDay  = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   for (let i = 0; i < firstDay; i++) {
-    const cell = document.createElement("div");
-    cell.className = "calendar-day empty";
-    grid.appendChild(cell);
+    const el = document.createElement("div");
+    el.className = "calendar-day empty";
+    grid.appendChild(el);
   }
   for (let d = 1; d <= lastDay; d++) {
-    const cell = document.createElement("div");
-    cell.className = d === now.getDate() ? "calendar-day today" : "calendar-day";
-    cell.textContent = d;
-    grid.appendChild(cell);
+    const el = document.createElement("div");
+    el.className = d === now.getDate() ? "calendar-day today" : "calendar-day";
+    el.textContent = d;
+    grid.appendChild(el);
   }
-}
-gerarCalendario();
+})();
 
 // Clima
+const SP_LAT = -23.5505, SP_LON = -46.6333;
 function setWeather(lat, lon) {
-  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
-    .then(r => r.json())
+  return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
     .then(data => {
       const temp = Math.round(data.current_weather.temperature);
       document.getElementById("temp").textContent = temp + "°C";
@@ -333,15 +661,18 @@ function setWeather(lat, lon) {
       else if (temp <= 18) { icon = "❄️"; desc = "Frio"; }
       document.getElementById("icon").textContent = icon;
       document.getElementById("desc").textContent = desc;
-    }).catch(() => { document.getElementById("desc").textContent = "Sem sinal"; });
+    });
 }
-function fallback() {
-  fetch("https://ipapi.co/json/").then(r => r.json()).then(l => setWeather(l.latitude, l.longitude))
-    .catch(() => { document.getElementById("desc").textContent = "Offline"; });
+function loadWeather() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => setWeather(p.coords.latitude, p.coords.longitude).catch(() => setWeather(SP_LAT, SP_LON)),
+      () => setWeather(SP_LAT, SP_LON),
+      { timeout: 5000 }
+    );
+  } else { setWeather(SP_LAT, SP_LON); }
 }
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(p => setWeather(p.coords.latitude, p.coords.longitude), fallback);
-} else { fallback(); }
+loadWeather();
 </script>
 </body>
 </html>
